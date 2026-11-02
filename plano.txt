@@ -1,0 +1,77 @@
+1. Arquitetura de Arquivos (Modularização) - OK
+A mesma lógica limpa que você aprendeu a usar, dividindo responsabilidades:
+
+main.py: Ponto de entrada, cuida da inicialização e da janela de login/cadastro de usuário.
+
+database.py: Criação do arquivo SQLite e das tabelas do sistema financeiro.
+
+crud.py: Funções que conversam com o banco (inserir gasto, puxar extrato, calcular saldo).
+
+janela_principal.py: O painel principal do sistema após o login.
+
+2. Estrutura do Banco de Dados (Tabelas) - OK
+Para um sistema financeiro simples e funcional, você precisará de três tabelas principais:
+
+Tabela: usuarios (igual ao seu projeto anterior)
+id (Chave Primária, Autoincremento)
+
+usuario (Texto)
+
+senha (Texto)
+
+Tabela: transacoes (O coração do sistema)
+Guarda cada movimentação de dinheiro (seja entrada ou saída).
+
+id (Chave Primária, Autoincremento)
+
+tipo (Texto: Ex: "Receita" ou "Despesa")
+
+descricao (Texto: Ex: "Salário de entregas", "Lanche")
+
+valor (Real / Número Decimal: Ex: 50.00)
+
+data (Texto ou Data: Quando aconteceu)
+
+usuario_id (Para saber de qual usuário é essa transação)
+
+3. Fluxo de Telas e Abas (CTkTabview) - OK
+Na janela principal, você pode organizar o sistema em 4 abas estratégicas:
+
+📊 Aba 1: Resumo / Dashboard - Ok
+O que tem: Indicadores visuais rápidos (Cards) mostrando:
+
+Saldo Total Atual (Entradas menos Saídas).
+
+Total de Entradas do mês.
+
+Total de Saídas do mês.
+
+Para que serve: Bater o olho e saber como está a saúde financeira.
+
+➕ Aba 2: Nova Transação - OK
+O que tem:
+
+Menu de escolha (Receita ou Despesa).
+
+Campo de descrição (Ex: "Conta de Luz").
+
+Campo de valor (Ex: "120.00").
+
+Botão Salvar.
+
+Para que serve: Registrar cada dinâmico que entra ou sai.
+
+📋 Aba 3: Extrato / Histórico - OK
+O que tem: Um frame rolável estilo tabela (CTkScrollableFrame) listando todas as transações cadastradas, separando visualmente o que é ganho (talvez em verde) do que é gasto (talvez em vermelho).
+
+Para que serve: Conferir o histórico completo e permitir deletar um lançamento errado.
+
+⚙️ Aba 4: Configurações / Categorias (Opcional)
+O que tem: Opções para gerenciar categorias (Alimentação, Transporte, Lazer, Trabalho) ou limpar dados.
+
+4. O Grande Desafio Lógico Diferente (O "Pulo do Gato")
+No seu projeto do Grêmio, você lidava muito com textos (nomes, cargos). Neste de finanças, o grande foco lógico será:
+
+Tratamento de Números: Garantir que se o usuário digitar uma vírgula (50,50) no valor, o Python entenda e converta para ponto (50.50) para o SQLite não dar erro.
+
+Funções de Agregação: Usar comandos SQL específicos de soma (SUM) para calcular o total de dinheiro direto no banco de dados sem precisar somar um por um manualmente no Python.
