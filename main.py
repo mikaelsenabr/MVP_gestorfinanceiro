@@ -3,6 +3,7 @@ from janela_principal import montar_janela_principal
 from crud import *
 import customtkinter as ctk
 
+
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
 
