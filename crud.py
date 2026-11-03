@@ -16,19 +16,19 @@ def verificar_usuario(usuario, senha):
 
 
 # CRUD DE TRANSAÇÕES
-def cadastrar_transacao(tipo, descricao, valor, data, usuario_id):
+def cadastrar_transacao(categoria, tipo, descricao, valor, data, usuario_id):
     cursor.execute("""
-        INSERT INTO transacoes (tipo, descricao, valor, data, usuario_id) 
-        VALUES (?, ?, ?, ?, ?)
-    """, (tipo, descricao, valor, data, usuario_id))
+        INSERT INTO transacoes (tipo, categoria, descricao, valor, data, usuario_id) 
+        VALUES (?, ?, ?, ?, ?, ?)
+    """, (tipo, categoria, descricao, valor, data, usuario_id))
     conexao.commit()
 
 
 # LISTA TRANSAÇÕES
-def gerar_lista_transacoes():
-    cursor.execute("""SELECT tipo, descricao, valor, data, usuario_id FROM transacoes""")
-    membros = cursor.fetchall() # Buscar todos os registros (como preencher a tabela com a lista completa de membros)
-    return membros
+def gerar_lista_transacoes(usuario_id):
+    cursor.execute("""SELECT tipo, categoria,  descricao, valor, data, usuario_id FROM transacoes WHERE usuario_id = ?""", (usuario_id,))
+    transacoes = cursor.fetchall() 
+    return transacoes
 
 # CALCULAR TOTAL
 def calcular_total(tipo, usuario_id):

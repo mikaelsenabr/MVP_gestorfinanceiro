@@ -4,7 +4,7 @@ import customtkinter as ctk
 
 def montar_janela_principal(janela, usuario_id):
 
-    janela.geometry("600x550")
+    janela.geometry("750x550")
     janela.title("Sistema - Grêmio")
 
     def atualizar_lista_transacoes():
@@ -21,25 +21,24 @@ def montar_janela_principal(janela, usuario_id):
             label_valor_saida.configure(text=f"R$ {total_saidas:.2f}")
             label_valor_saldo.configure(text=f"R$ {saldo_total:.2f}")
 
-
-
         if tabela.get() == "Extrato":
             # Limpa todos os widgets antigos de dentro do frame rolável
             for widget in frame.winfo_children():
                 widget.destroy()
             
             # Busca os dados atualizados no banco        
-            dados_membros = gerar_lista_transacoes()
+            dados_transacoes = gerar_lista_transacoes(usuario_id)
 
             linha = 0
-            for membro in dados_membros:
-                tipo, descricao, valor, data, id_usuario  = membro
-                
-                ctk.CTkLabel(frame, text="{}".format(tipo)).grid(row=linha, column=0, pady=20, padx=10)
-                ctk.CTkLabel(frame, text="{}".format(descricao)).grid(row=linha, column=1, pady=20, padx=50)
-                ctk.CTkLabel(frame, text="{}".format(valor)).grid(row=linha, column=2, pady=20, padx=70)
-                ctk.CTkLabel(frame, text="{}".format(data)).grid(row=linha, column=3, pady=20, padx=15)
-                ctk.CTkLabel(frame, text="{}".format(id_usuario)).grid(row=linha, column=4, pady=20, padx=60)
+            for transacao in dados_transacoes:
+                tipo, categoria, descricao, valor, data, id_usuario  = transacao
+
+                ctk.CTkLabel(frame, text="{}".format(tipo)).grid(row=linha, column=0, pady=20, padx=0)
+                ctk.CTkLabel(frame, text="{}".format(categoria)).grid(row=linha, column=1, pady=20, padx=10)            
+                ctk.CTkLabel(frame, text="{}".format(descricao)).grid(row=linha, column=2, pady=20, padx=50)
+                ctk.CTkLabel(frame, text="{}".format(valor)).grid(row=linha, column=3, pady=20, padx=95)
+                ctk.CTkLabel(frame, text="{}".format(data)).grid(row=linha, column=4, pady=20, padx=0)
+                ctk.CTkLabel(frame, text="{}".format(id_usuario)).grid(row=linha, column=5, pady=20, padx=70)
 
                 linha += 1
 
@@ -91,7 +90,8 @@ def montar_janela_principal(janela, usuario_id):
 
     # TABELA 2 - NOVA TRANSAÇÃO
     def salvar_transacao():
-        tipo = selecionar_opcao.get()
+        tipo = selecionar_tipo.get()
+        categoria = selecionar_categoria.get()
         descricao = campo_descricao.get().lower()
         valor = campo_valor.get()
         data = campo_data.get().strip()
@@ -100,7 +100,7 @@ def montar_janela_principal(janela, usuario_id):
             try:
                 valor_formatado = float(valor.replace(",", "."))
 
-                cadastrar_transacao(tipo, descricao, valor_formatado, data, usuario_id)
+                cadastrar_transacao(categoria, tipo, descricao, valor_formatado, data, usuario_id)
 
                 campo_resultado.configure(text="Transação Cadastrada!")
 
@@ -109,14 +109,18 @@ def montar_janela_principal(janela, usuario_id):
                 campo_data.delete(0, "end")
 
             except ValueError:
-                campo_resultado.configure(text="")
+                campo_resultado.configure(text="Erro: Digite um valor numérico válido!", text_color="red")
 
 
 
-    escolha = ["Receita", "Despesa"]
+    tipo = ["Receita", "Despesa"]
+    categoria = ["Alimentação", "Transporte", "Lazer"]
 
-    selecionar_opcao = ctk.CTkOptionMenu(tab_2, values=escolha)
-    selecionar_opcao.pack(pady=10)
+    selecionar_tipo = ctk.CTkOptionMenu(tab_2, values=tipo)
+    selecionar_tipo.pack(pady=10)
+
+    selecionar_categoria = ctk.CTkOptionMenu(tab_2, values=categoria)
+    selecionar_categoria.pack(pady=10)
 
     campo_descricao = ctk.CTkEntry(tab_2, placeholder_text="Descrição")
     campo_descricao.pack(pady=10)
@@ -138,11 +142,12 @@ def montar_janela_principal(janela, usuario_id):
     cabecalho = ctk.CTkFrame(tab_3)
     cabecalho.pack(fill="x", padx=20, pady=(10, 0))
 
-    ctk.CTkLabel(cabecalho, text="Tipo", font=("Arial", 15)).grid(row=2, column=1, padx=15)
-    ctk.CTkLabel(cabecalho, text="Descrição", font=("Arial", 15)).grid(row=2, column=2, padx=60)
-    ctk.CTkLabel(cabecalho, text="Valor", font=("Arial", 15)).grid(row=2, column=3, padx=50)
-    ctk.CTkLabel(cabecalho, text="Data", font=("Arial", 15)).grid(row=2, column=4, padx=20)
-    ctk.CTkLabel(cabecalho, text="Usuário", font=("Arial", 15)).grid(row=2, column=5, padx=30)
+    ctk.CTkLabel(cabecalho, text="Tipo", font=("Arial", 15)).grid(row=2, column=1, padx=0)
+    ctk.CTkLabel(cabecalho, text="Categoria", font=("Arial", 15)).grid(row=2, column=2, padx=15)
+    ctk.CTkLabel(cabecalho, text="Descrição", font=("Arial", 15)).grid(row=2, column=3, padx=60)
+    ctk.CTkLabel(cabecalho, text="Valor", font=("Arial", 15)).grid(row=2, column=4, padx=50)
+    ctk.CTkLabel(cabecalho, text="Data", font=("Arial", 15)).grid(row=2, column=5, padx=20)
+    ctk.CTkLabel(cabecalho, text="Usuário", font=("Arial", 15)).grid(row=2, column=6, padx=30)
 
     # Criando o Scrollable Frame
     frame = ctk.CTkScrollableFrame(tab_3,

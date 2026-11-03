@@ -82,8 +82,12 @@ def registrar():
         if resultado is None:
                 registrar_usuario(usuario, confirmar_senha)
 
+                # Pega o ID do usuário que acabou de ser criado
+                usuario_novo = verificar_usuario(usuario, confirmar_senha)
+                usuario_logado_id = usuario_novo[0]
+
                 janela_login.destroy()       # Fecha a janela de login
-                montar_janela_principal(app_principal)
+                montar_janela_principal(app_principal, usuario_logado_id)
                 app_principal.deiconify()    # Revela a janela principal já carregada!
         else:
             label_confirmar_registro.configure(text="Usuário Já Cadastrado. Faça o Login!", text_color="red")

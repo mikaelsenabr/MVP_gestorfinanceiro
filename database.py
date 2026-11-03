@@ -14,6 +14,7 @@ cursor.execute("""CREATE TABLE IF NOT EXISTS usuarios (
 cursor.execute("""CREATE TABLE IF NOT EXISTS transacoes (
                 id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
                 tipo TEXT NOT NULL,
+                categoria TEXT NOT NULL,
                 descricao TEXT NOT NULL,
                 valor REAL NOT NULL,
                 data TEXT NOT NULL,
